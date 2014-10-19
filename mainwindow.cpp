@@ -35,23 +35,24 @@ MainWindow::MainWindow(QWidget *parent) :
     width=240;
     QImage TempImg(height,width, QImage::Format_RGB32);
     Img=TempImg; //Прежде чем рисовать надо задать высоту, ширину и формат изображения
-
+    Temp_Img=TempImg;
     for (int i=0;i<width;i++)       //Циклы для заполнения квадрата разными цветами
         for (int j=0;j<height;j++)
         {
             clr = qRgb(i, j, blue); //Собираем цвет
             Img.setPixel(i,j,clr);  //Рисуем пиксель этим цветом в координатах i,j
+            Temp_Img.setPixel(i, j, clr);
             blue++;
             if (blue==241) blue=0;
         }
-        TempImg=Img;
+
     ui->setupUi(this);
     ui->progressBar->hide();
 
     View = new GraphicsView(ui->widget);
     View->scene.addPixmap(QPixmap::fromImage(Img));
     View2 = new GraphicsView(ui->widget_2);
-    View2->scene.addPixmap(QPixmap::fromImage(TempImg));
+    View2->scene.addPixmap(QPixmap::fromImage(Temp_Img));
 }
 void MainWindow::on_pushButton_pressed()
 {
@@ -120,35 +121,41 @@ void MainWindow::on_pushButton_3_pressed()
                             req_y=req_y_temp;
                         }
 
-                    req_x_temp++;
+                    req_y_temp++;
 
-                    if(req_x_temp==req_width-1)req_y_temp++,req_x_temp=0;
+
+
+                    if(req_y_temp==req_height&&req_x_temp!=req_width-1)req_x_temp++,req_y_temp=0;
 
             }
             else
             {
                 req_x=req_x_temp=0;
                 req_y=req_y_temp=0;
+
             }
 
 
         }
-            if(req_x_temp==req_width-1&&req_y_temp==req_height-1)
+            if(req_y_temp==req_height&&req_x_temp==req_width-1)
             {
-                for(int i= req_x;i<req_x_temp;i++)
-                    for(int n= req_y-3;n<3;i++) Img.setPixel(i,n,Qt::color1);
-
-                for(int i= req_x-3;i<3;i++)
-                    for(int n= req_y;n<req_y_temp;i++) Img.setPixel(i,n,Qt::color1);
+                req_x_temp++;
 
                 for(int i= req_x;i<req_x_temp;i++)
-                    for(int n= req_y_temp-3;n<3;i++) Img.setPixel(i,n,Qt::color1);
+                    for(int n= req_y;n<req_y+3;n++) Img.setPixel(i,n,Qt::color1);
 
-                for(int i= req_x_temp-3;i<3;i++)
-                    for(int n= req_y;n<req_y_temp;i++) Img.setPixel(i,n,Qt::color1);
+                for(int i= req_x;i<req_x+3;i++)
+                    for(int n= req_y;n<req_y_temp;n++) Img.setPixel(i,n,Qt::color1);
+
+                for(int i= req_x;i<req_x_temp;i++)
+                    for(int n= req_y_temp-3;n<req_y_temp;n++) Img.setPixel(i,n,Qt::color1);
+
+                for(int i= req_x_temp-3;i<req_x_temp;i++)
+                    for(int n= req_y;n<req_y_temp;n++) Img.setPixel(i,n,Qt::color1);
 
                 req_x=req_x_temp=0;
                 req_y=req_y_temp=0;
+
             }
     }
     View->scene.clear();
