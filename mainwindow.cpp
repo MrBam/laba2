@@ -101,24 +101,27 @@ void MainWindow::on_pushButton_3_pressed()
 
     // matrix matrixImg(height,width);
 
-    int req_x = 0;
-    int req_y = 0;
+    int req_x_start = 0;
+    int req_y_start = 0;
+    int req_x_end = 0;
+    int req_y_end = 0;
 
     int req_x_temp = 0;
     int req_y_temp = 0;
 
     for (int x=0; x<width; x++)
     {
+        int y;
         ui->progressBar->setValue(x);
-        for (int y=0; y<height; y++)
+        for (y=0; y<height; y++)
         {
 
             if(Img.pixel(x,y) == Temp_Img.pixel(req_x_temp,req_y_temp))
             {
-                        if(req_x==0&&req_y==0)
+                        if(req_x_start==0&&req_y_start==0)
                         {
-                            req_x=req_x_temp;
-                            req_y=req_y_temp;
+                            req_x_start=x;
+                            req_y_start=y;
                         }
 
                     req_y_temp++;
@@ -130,8 +133,8 @@ void MainWindow::on_pushButton_3_pressed()
             }
             else
             {
-                req_x=req_x_temp=0;
-                req_y=req_y_temp=0;
+                req_x_start=req_x_temp=0;
+                req_y_start=req_y_temp=0;
 
             }
 
@@ -139,22 +142,25 @@ void MainWindow::on_pushButton_3_pressed()
         }
             if(req_y_temp==req_height&&req_x_temp==req_width-1)
             {
-                req_x_temp++;
 
-                for(int i= req_x;i<req_x_temp;i++)
-                    for(int n= req_y;n<req_y+3;n++) Img.setPixel(i,n,Qt::color1);
+                req_x_end=x+1;
+                req_y_end=y;
 
-                for(int i= req_x;i<req_x+3;i++)
-                    for(int n= req_y;n<req_y_temp;n++) Img.setPixel(i,n,Qt::color1);
 
-                for(int i= req_x;i<req_x_temp;i++)
-                    for(int n= req_y_temp-3;n<req_y_temp;n++) Img.setPixel(i,n,Qt::color1);
+                for(int i= req_x_start;i<req_x_end;i++)
+                    for(int n= req_y_start;n<req_y_start+3;n++) Img.setPixel(i,n,Qt::color1);
 
-                for(int i= req_x_temp-3;i<req_x_temp;i++)
-                    for(int n= req_y;n<req_y_temp;n++) Img.setPixel(i,n,Qt::color1);
+                for(int i= req_x_start;i<req_x_start+3;i++)
+                    for(int n= req_y_start;n<req_y_end;n++) Img.setPixel(i,n,Qt::color1);
 
-                req_x=req_x_temp=0;
-                req_y=req_y_temp=0;
+                for(int i= req_x_start;i<req_x_end;i++)
+                    for(int n= req_y_end-3;n<req_y_end;n++) Img.setPixel(i,n,Qt::color1);
+
+                for(int i= req_x_end-3;i<req_x_end;i++)
+                    for(int n= req_y_start;n<req_y_end;n++) Img.setPixel(i,n,Qt::color1);
+
+                req_x_start=req_x_temp=req_x_end=0;
+                req_y_start=req_y_temp=req_y_end=0;
 
             }
     }
