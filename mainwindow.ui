@@ -76,7 +76,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>F:\qtworkout\laba2\1.jpg</string>
+     <string>F:\qtworkout\laba2\1.bmp</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_2">
@@ -89,7 +89,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>F:\qtworkout\laba2\2.jpg</string>
+     <string>F:\qtworkout\laba2\2.bmp</string>
     </property>
    </widget>
    <widget class="QWidget" name="widget" native="true">
@@ -161,7 +161,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>390</y>
+      <y>420</y>
       <width>621</width>
       <height>23</height>
      </rect>
@@ -171,6 +171,51 @@
     </property>
     <property name="textVisible">
      <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QSlider" name="horizontalSlider">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>380</y>
+      <width>601</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="value">
+     <number>77</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>360</y>
+      <width>191</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Необходимый процент совпадения :</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>360</y>
+      <width>46</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

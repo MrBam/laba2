@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
         {
             clr = qRgb(i, j, blue); //Собираем цвет
             Img.setPixel(i,j,clr);  //Рисуем пиксель этим цветом в координатах i,j
+
             Temp_Img.setPixel(i, j, clr);
             blue++;
             if (blue==241) blue=0;
@@ -53,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     View->scene.addPixmap(QPixmap::fromImage(Img));
     View2 = new GraphicsView(ui->widget_2);
     View2->scene.addPixmap(QPixmap::fromImage(Temp_Img));
+     ui->label_4->setText(QString::number(ui->horizontalSlider->value()));
 }
 void MainWindow::on_pushButton_pressed()
 {
@@ -90,7 +92,7 @@ void MainWindow::on_lineEdit_2_returnPressed()
 
 void MainWindow::on_pushButton_3_pressed()
 {
-    QPainter painter;
+
     int height=Img.height();
     int width=Img.width();
     int req_height=Temp_Img.height();
@@ -101,71 +103,66 @@ void MainWindow::on_pushButton_3_pressed()
 
     // matrix matrixImg(height,width);
 
+
     int req_x_start = 0;
-    int req_y_start = 0;
+    int req_y_start = 0;//координаты начала
+
     int req_x_end = 0;
-    int req_y_end = 0;
+    int req_y_end = 0;// координаты конеца
 
-    int req_x_temp = 0;
-    int req_y_temp = 0;
-
-    for (int x=0; x<width; x++)
+   int req_qol = 0;//промежуточные координаты
+   int req_sq = req_height*req_width;
+   int percent = ui->horizontalSlider->value() ;
+    for (int x=0; x<width-req_width; x++)
     {
         int y;
         ui->progressBar->setValue(x);
-        for (y=0; y<height; y++)
-        {
-
-            if(Img.pixel(x,y) == Temp_Img.pixel(req_x_temp,req_y_temp))
+        for (y=0; y<height-req_height; y++)
+          if(Img.pixel(x,y) == Temp_Img.pixel(0,0))
             {
-                        if(req_x_start==0&&req_y_start==0)
-                        {
-                            req_x_start=x;
-                            req_y_start=y;
-                        }
+                req_qol=0;
 
-                    req_y_temp++;
+                req_x_start=x;
+                req_y_start=y;
 
-
-
-                    if(req_y_temp==req_height&&req_x_temp!=req_width-1)req_x_temp++,req_y_temp=0;
-
-            }
-            else
-            {
-                req_x_start=req_x_temp=0;
-                req_y_start=req_y_temp=0;
-
-            }
+                for(int xx=0;xx<req_width;xx++)
+                    for(int yy=0;yy<req_height;yy++)
+                        if(Img.pixel(x+xx,y+yy) == Temp_Img.pixel(xx,yy))
+                             req_qol++;
 
 
-        }
-            if(req_y_temp==req_height&&req_x_temp==req_width-1)
+
+            if(percent<(req_qol/req_sq)*100)
             {
 
-                req_x_end=x+1;
-                req_y_end=y;
+                req_x_end=req_x_start+req_width;
+                req_y_end=req_y_start+req_height;
 
 
                 for(int i= req_x_start;i<req_x_end;i++)
-                    for(int n= req_y_start;n<req_y_start+3;n++) Img.setPixel(i,n,Qt::color1);
+                    for(int n= req_y_start;n<req_y_start+3;n++) Img.setPixel(i,n,Qt::red);
 
                 for(int i= req_x_start;i<req_x_start+3;i++)
-                    for(int n= req_y_start;n<req_y_end;n++) Img.setPixel(i,n,Qt::color1);
+                    for(int n= req_y_start;n<req_y_end;n++) Img.setPixel(i,n,Qt::green);
 
                 for(int i= req_x_start;i<req_x_end;i++)
-                    for(int n= req_y_end-3;n<req_y_end;n++) Img.setPixel(i,n,Qt::color1);
+                    for(int n= req_y_end-3;n<req_y_end;n++) Img.setPixel(i,n,Qt::blue);
 
                 for(int i= req_x_end-3;i<req_x_end;i++)
                     for(int n= req_y_start;n<req_y_end;n++) Img.setPixel(i,n,Qt::color1);
 
-                req_x_start=req_x_temp=req_x_end=0;
-                req_y_start=req_y_temp=req_y_end=0;
-
             }
+            req_x_start=req_x_end=0;
+            req_y_start=req_y_end=0;
+          }
     }
     View->scene.clear();
     View->scene.addPixmap(QPixmap::fromImage(Img));
     ui->progressBar->setValue(ui->progressBar->maximum());
     ui->progressBar->hide();
+}
+
+void MainWindow::on_horizontalSlider_actionTriggered(int action)
+{
+    ui->label_4->setText(QString::number(ui->horizontalSlider->value()));
 }

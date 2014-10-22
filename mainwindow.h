@@ -56,6 +56,8 @@ private slots:
 
    void on_pushButton_3_pressed();
 
+   void on_horizontalSlider_actionTriggered(int action);
+
 private:
     Ui::MainWindow *ui;
 };
